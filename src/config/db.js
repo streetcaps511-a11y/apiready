@@ -1,29 +1,29 @@
-// config/db.js
+// src/config/db.js
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-console.log('\n🔍 Intentando conectar a PostgreSQL:');
-console.log(`   Host: ${process.env.DB_HOST}`);
-console.log(`   Puerto: ${process.env.DB_PORT}`);
-console.log(`   Base de datos: ${process.env.DB_NAME}`);
-console.log(`   Usuario: ${process.env.DB_USER}`);
-
-const sequelize = new Sequelize(
+export const sequelize = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USER,
     process.env.DB_PASSWORD,
     {
         host: process.env.DB_HOST,
-        port: process.env.DB_PORT || 5432,
+        port: process.env.DB_PORT,
         dialect: 'postgres',
-        logging: false, // puedes poner console.log si quieres ver queries
+        logging: false, // o console.log para ver queries en desarrollo
         dialectOptions: {
             ssl: {
                 require: true,
-                rejectUnauthorized: false
+                rejectUnauthorized: false // Requerido por Aiven
             }
+        },
+        pool: {
+            max: 5,
+            min: 0,
+            acquire: 30000,
+            idle: 10000
         }
     }
 );
@@ -31,11 +31,9 @@ const sequelize = new Sequelize(
 export const connectDB = async () => {
     try {
         await sequelize.authenticate();
-        console.log('   ✅ Base de datos conectada exitosamente');
+        console.log('✅ PostgreSQL conectado');
     } catch (error) {
-        console.log('   ❌ Error de conexión:', error.message);
+        console.error('❌ Error de conexión:', error);
         throw error;
     }
 };
-
-export { sequelize };
