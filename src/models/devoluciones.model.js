@@ -84,7 +84,7 @@ const Devolucion = sequelize.define('Devolucion', {
         field: 'Cantidad',
         comment: 'Cantidad devuelta'
     },
-    Valor: {
+    Precio: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
         defaultValue: 0,
