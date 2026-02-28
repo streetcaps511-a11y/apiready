@@ -4,7 +4,6 @@ import { sequelize } from '../config/db.js';
 
 /**
  * Modelo de Tallas
- * Representa las tallas disponibles para productos
  * @table Tallas
  */
 const Talla = sequelize.define(
@@ -15,21 +14,16 @@ const Talla = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
-      field: 'IdTalla',
-      comment: 'Identificador único de la talla'
+      field: 'IdTalla'
     },
 
     Nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      // ⚠️ unique: true,  // Comentado para evitar error con sync({ alter: true }) en PostgreSQL
-      // ✅ La restricción UNIQUE debe agregarse mediante migración:
-      //    await queryInterface.addConstraint('Tallas', { fields: ['Nombre'], type: 'unique' });
       field: 'Nombre',
-      comment: 'Nombre de la talla (S, M, L, XL, etc)',
       validate: {
         notEmpty: {
-          msg: 'El nombre de la talla es requerido'
+          msg: 'El nombre es requerido'
         },
         len: {
           args: [1, 50],
@@ -43,7 +37,6 @@ const Talla = sequelize.define(
       allowNull: false,
       defaultValue: 0,
       field: 'Cantidad',
-      comment: 'Cantidad disponible de esta talla',
       validate: {
         min: {
           args: [0],
@@ -55,14 +48,7 @@ const Talla = sequelize.define(
   {
     tableName: 'Tallas',
     timestamps: false,
-    freezeTableName: true,
-    indexes: [
-      {
-        unique: true,
-        fields: ['Nombre'],
-        name: 'Tallas_Nombre_unique'
-      }
-    ]
+    freezeTableName: true
   }
 );
 
